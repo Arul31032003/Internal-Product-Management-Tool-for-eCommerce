@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div class="dashboard">
+    <h2>Welcome, Seller!</h2>
+</div>
+
+    <div class="stats">
+        <!-- Categories Card -->
+        <a href="{{ url_for('categories') }}" class="card-link">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/categories.png') }}" alt="Categories">
+                <h3>{{ categories|length }}</h3>
+                <p>Total Categories</p>
+            </div>
+        </a>
+
+        <!-- Products Card -->
+        <a href="{{ url_for('products') }}" class="card-link">
+            <div class="card">
+                <img src="{{ url_for('static', filename='images/products.png') }}" alt="Products">
+                <h3>{{ products|length }}</h3>
+                <p>Total Products</p>
+            </div>
+        </a>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Internal Product Tool</title>
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Sidebar */
+    .sidebar {
+      width: 200px;
+      background: #0047b3;
+      color: white;
+      position: fixed;
+      top: 0;
+      left: -220px; /* hidden by default */
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      padding-top: 20px;
+      transition: left 0.3s ease;
+      z-index: 1000;
+    }
+
+    .sidebar.active { left: 0; }
+
+    .sidebar h2 { text-align: center; margin-bottom: 20px; font-size: 18px; }
+
+    .sidebar a {
+      color: white;
+      text-decoration: none;
+      padding: 12px 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: background 0.3s;
+    }
+
+    .sidebar a:hover { background: #003380; }
+
+    /* Main area */
+    .main-area {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+      transition: margin-left 0.3s ease;
+    }
+
+    .main-area.shift { margin-left: 200px; }
+
+    /* Top Navbar */
+    .top-nav {
+      height: 60px;
+      background: #f8f8f8;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    }
+
+    .menu-btn {
+      font-size: 24px;
+      cursor: pointer;
+      color: #0047b3;
+      background: none;
+      border: none;
+    }
+
+    .top-nav a {
+      text-decoration: none;
+      color: #0047b3;
+      font-weight: bold;
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
+
+    /* Main content */
+    .main-content { flex-grow: 1; padding: 20px; }
+
+    /* Flash messages */
+    .messages {
+      list-style:none;
+      padding:10px;
+      background:#fffae6;
+      color:#8a6d3b;
+      margin:10px 0;
+      border-radius:5px;
+    }
+  </style>
+</head>
+<body>
+  <!-- Sidebar -->
+  <div class="sidebar" id="sidebar">
+    <h2>Menu</h2>
+    <a href="{{ url_for('categories') }}"><i class="fas fa-list"></i> Categories</a>
+    <a href="{{ url_for('products') }}"><i class="fas fa-box"></i> Products</a>
+  </div>
+
+  <!-- Main Area -->
+  <div class="main-area" id="mainArea">
+    <!-- Top Navbar -->
+    <div class="top-nav">
+      <button class="menu-btn" id="menuBtn"><i class="fas fa-bars"></i></button>
+
+      <!-- Home link only if not dashboard -->
+      <div>
+
+        {% if not dashboard_page %}
+        <a href="{{ url_for('index') }}"><i class="fas fa-home"></i> Home</a>
+        {% endif %}
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-content">
+      {% with messages = get_flashed_messages() %}
+        {% if messages %}
+          <ul class="messages">
+            {% for m in messages %}
+              <li>{{ m }}</li>
+            {% endfor %}
+          </ul>
+        {% endif %}
+      {% endwith %}
+
+      {% block content %}{% endblock %}
+    </div>
+  </div>
+
+
+  <script>
+    const menuBtn = document.getElementById('menuBtn');
+    const sidebar = document.getElementById('sidebar');
+    const mainArea = document.getElementById('mainArea');
+
+    menuBtn.addEventListener('click', () => {
+      sidebar.classList.toggle('active');
+      mainArea.classList.toggle('shift');
+    });
+  </script>
+</body>
+</html>

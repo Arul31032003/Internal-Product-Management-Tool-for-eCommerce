@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Attributes for {{ category['Name'] }}</h2>
+<div class="attributes-container">
+    <!-- Add Attribute Form -->
+   <form method="POST" class="attribute-form" style="max-width:500px;">
+
+    <div style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+        <!-- Attribute Name -->
+        <input type="text" name="name" placeholder="Attribute Name" required style="flex:2; padding:8px;">
+
+        <!-- Data Type -->
+        <select name="data_type" style="flex:1; padding:8px;">
+            <option value="string">String</option>
+            <option value="int">Integer</option>
+            <option value="float">Float</option>
+            <option value="bool">Boolean</option>
+        </select>
+
+        <!-- Add Button -->
+        <button type="submit" style="display:flex; gap:8px; align-items:center; margin-bottom:12px;">
+            Add
+        </button>
+    </div>
+
+</form>
+
+
+    </form>
+
+    <!-- Attributes List (Numbered) -->
+    <ol class="attributes-list">
+        {% for a in attributes %}
+        <li>{{ a['Name'] }}</li>
+        {% endfor %}
+    </ol>
+
+</div> <a href="{{ url_for('categories') }}" class="back-btn">Back</a>
+<div
+
+{% endblock %}

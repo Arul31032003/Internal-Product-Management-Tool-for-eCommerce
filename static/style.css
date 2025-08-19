@@ -1,0 +1,269 @@
+
+/* Push page content down so it doesn't go under fixed nav */
+body {
+    padding-top: 0px; /* same as nav height */
+    font-family: Arial, sans-serif;
+    background: #f4f7fa;
+}
+
+/* ---------- Dashboard ---------- */
+.dashboard h2 {
+    text-align: center;
+    margin-bottom: 30px;
+    color: #0047b3;
+}
+
+.stats {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.card-link {
+    text-decoration: none;
+    color: inherit;
+}
+
+.card {
+    background: white;
+    border-radius: 15px;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    width: 200px;
+    text-align: center;
+    padding: 20px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.card img {
+    width: 60px;
+    height: 60px;
+    margin-bottom: 10px;
+}
+
+.card h3 {
+    font-size: 28px;
+    margin: 10px 0;
+    color: #007bff;
+}
+
+.card p {
+    font-size: 16px;
+    color: #555;
+}
+
+.card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+}
+
+/* Animation keyframes */
+@keyframes moveRight {
+  0% { left: -100px; }
+  100% { left: 100%; }
+}
+
+/* ---------- Responsive ---------- */
+@media (max-width: 768px) {
+    .stats {
+        flex-direction: column;
+        align-items: center;
+    }
+    .nav-links {
+        flex-direction: column;
+        gap: 15px;
+        padding: 20px 0;
+    }
+}/* ---------- Categories Table ---------- */
+.categories-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.categories-table th, .categories-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.categories-table th {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.categories-table tr:hover {
+    background: #f1f7ff;
+}
+
+.cat-actions a {
+    margin: 0 5px;
+    font-size: 18px;
+    color: #007bff;
+    transition: color 0.3s, transform 0.3s;
+}
+
+.cat-actions a:hover {
+    color: #0056b3;
+    transform: scale(1.2);
+}
+
+/* Form + Search Bar */
+.category-form {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    justify-content: flex-start;
+    margin-bottom: 15px;
+}
+
+.category-form input[type="text"] {
+    padding: 8px;
+    font-size: 14px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+}
+
+.category-form button {
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background 0.3s, transform 0.3s;
+}
+
+.category-form button:hover {
+    background: #0056b3;
+    transform: scale(1.05);
+}
+
+#categorySearch {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+}
+
+##attributes
+
+.attributes-container {
+    max-width: 500px;
+    margin: 50px auto;
+    text-align: center;
+    background: #ffffff;
+    padding: 30px;
+    border-radius: 15px;
+    box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+}
+
+
+.attribute-form input,
+.attribute-form select {
+    margin: 5px;
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+}
+
+.attribute-form button {
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+.attribute-form button:hover {
+    background: #0056b3;
+}
+.attributes-list {
+    padding-left: 20px; /* default for <ol> */
+    margin-top: 20px;
+}
+
+.attributes-list li {
+
+    margin: 8px 0;
+    padding: 10px;
+    border-radius: 8px;
+
+}
+.back-btn {
+    display: inline-block;
+    margin-top: 25px;
+    padding: 8px 15px;
+    background: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background 0.3s;
+}
+
+.back-btn:hover {
+    background: #0056b3;
+}
+
+/* ---------- Products Table ---------- */
+.products-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+    background: white;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.products-table th, .products-table td {
+    padding: 12px 15px;
+    text-align: left;
+    border-bottom: 1px solid #ddd;
+}
+
+.products-table th {
+    background: #007bff;
+    color: white;
+    font-weight: bold;
+}
+
+.products-table tr:hover {
+    background: #f1f7ff;
+}
+
+.products-table img {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 5px;
+}
+
+.product-actions a {
+    margin: 0 5px;
+    font-size: 16px;
+    color: #007bff;
+    transition: color 0.3s, transform 0.3s;
+    text-decoration: none;
+}
+
+.product-actions a:hover {
+    color: #0056b3;
+    transform: scale(1.2);
+}
+
+/* Search bar for products */
+#productSearch {
+    padding: 8px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    font-size: 14px;
+    margin-bottom: 15px;
+}

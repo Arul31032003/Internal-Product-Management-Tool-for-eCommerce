@@ -1,0 +1,70 @@
+CREATE DATABASE InternalTaskManagement;
+GO
+USE ProductMgmt;
+GO
+
+CREATE TABLE Categories (
+    CategoryID INT IDENTITY(1,1) PRIMARY KEY,
+    Name NVARCHAR(200) NOT NULL UNIQUE,
+    Description NVARCHAR(MAX) NULL,
+    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME()
+);
+
+CREATE TABLE AttributeDefinitions (
+    AttributeDefID INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryID INT NOT NULL,
+    Name NVARCHAR(200) NOT NULL,
+    Slug NVARCHAR(200) NOT NULL,
+    DataType NVARCHAR(50) NOT NULL,
+    IsRequired BIT DEFAULT 0,
+    Validations NVARCHAR(MAX) NULL,
+    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME(),
+    CONSTRAINT FK_AttrDef_Category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+CREATE TABLE AttributeOptions (
+    OptionID INT IDENTITY(1,1) PRIMARY KEY,
+    AttributeDefID INT NOT NULL,
+    Value NVARCHAR(200) NOT NULL,
+    DisplayLabel NVARCHAR(200) NULL,
+    CONSTRAINT FK_AttrOption_AttrDef FOREIGN KEY (AttributeDefID) REFERENCES AttributeDefinitions(AttributeDefID)
+);
+
+CREATE TABLE Products (
+    ProductID INT IDENTITY(1,1) PRIMARY KEY,
+    CategoryID INT NOT NULL,
+    Name NVARCHAR(300) NOT NULL,
+    SKU NVARCHAR(150) NOT NULL UNIQUE,
+    Price DECIMAL(18,2) NULL,
+    IsActive BIT DEFAULT 1,
+    CreatedAt DATETIME2 DEFAULT SYSUTCDATETIME(),
+    UpdatedAt DATETIME2 NULL,
+    CONSTRAINT FK_Product_Category FOREIGN KEY (CategoryID) REFERENCES Categories(CategoryID)
+);
+
+CREATE TABLE ProductAttributeValues (
+    ValueID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT NOT NULL,
+    AttributeDefID INT NOT NULL,
+    ValueString NVARCHAR(MAX) NULL,
+    ValueInt INT NULL,
+    ValueFloat FLOAT NULL,
+    ValueBool BIT NULL,
+    ValueJSON NVARCHAR(MAX) NULL,
+    CONSTRAINT FK_PAV_Product FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE,
+    CONSTRAINT FK_PAV_AttrDef FOREIGN KEY (AttributeDefID) REFERENCES AttributeDefinitions(AttributeDefID) ON DELETE CASCADE
+);
+
+CREATE TABLE ProductMedia (
+    MediaID INT IDENTITY(1,1) PRIMARY KEY,
+    ProductID INT NOT NULL,
+    Url NVARCHAR(1000) NOT NULL,
+    MediaType NVARCHAR(50) NULL,
+    CONSTRAINT FK_ProductMedia_Product FOREIGN KEY (ProductID) REFERENCES Products(ProductID) ON DELETE CASCADE
+);
+
+CREATE TABLE Users (
+    UserID INT IDENTITY(1,1) PRIMARY KEY,
+    Email NVARCHAR(300) NOT NULL UNIQUE,
+    FullName NVARCHAR(300) NULL
+);

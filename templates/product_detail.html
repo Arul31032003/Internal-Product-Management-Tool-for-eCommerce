@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block content %}
+
+<!-- Flash message popup -->
+{% with messages = get_flashed_messages() %}
+  {% if messages %}
+    <script>
+      {% for message in messages %}
+        alert("{{ message }}");
+      {% endfor %}
+    </script>
+  {% endif %}
+{% endwith %}
+
+<!-- Main Product Layout -->
+<div style="max-width:1000px; margin:auto; display:flex; gap:40px; flex-wrap:wrap; font-family:Arial, sans-serif;">
+
+    <!-- Images Section -->
+    <div style="flex:1; min-width:300px;">
+        {% if product['images'] %}
+            <div style="border:1px solid #ddd; border-radius:10px; padding:10px; text-align:center;">
+                <img id="mainImage" src="{{ url_for('static', filename=product['images'][0]) }}"
+                     alt="{{ product['Name'] }}" style="width:100%; max-width:400px; border-radius:10px;">
+            </div>
+            <div style="display:flex; gap:10px; margin-top:10px; flex-wrap:wrap;">
+                {% for img in product['images'] %}
+                <img src="{{ url_for('static', filename=img) }}" alt="{{ product['Name'] }}"
+                     style="width:60px; height:60px; object-fit:cover; border:1px solid #ddd; border-radius:5px; cursor:pointer;"
+                     onclick="document.getElementById('mainImage').src=this.src;">
+                {% endfor %}
+            </div>
+        {% else %}
+            <p>No images available</p>
+        {% endif %}
+    </div>
+
+    <!-- Details Section -->
+    <div style="flex:1; min-width:300px;">
+        <h1 style="color:#0047b3; margin-bottom:15px;">{{ product['Name'] }}</h1>
+        <p style="font-size:18px; color:#333; margin-bottom:10px;"><strong>Price:</strong> {{ product['Price'] }}</p>
+        <p style="font-size:16px; color:#555; margin-bottom:10px;"><strong>Description:</strong> {{ product['SKU'] }}</p>
+        <p style="font-size:16px; color:#555; margin-bottom:10px;"><strong>Category:</strong> {{ product['CategoryName'] }}</p>
+
+        {% if details %}
+        <h3 style="color:#007bff; margin-top:20px;">Product Details</h3>
+        <ul style="list-style:none; padding-left:0;">
+            {% for attr in details %}
+            <li style="margin-bottom:6px; padding:6px 10px; border-left:4px solid #007bff; background:#f9f9f9; border-radius:4px;">
+                <strong>{{ attr['name'] }}:</strong> {{ attr['value'] }}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+
+    </div>
+
+</div>
+<!-- Back Button -->
+<div style="max-width:1000px; margin:20px auto;">
+    <a href="{{ url_for('products') }}" class="back-btn" style="padding:8px 15px; background:#007bff; color:white; text-decoration:none; border-radius:5px;">Back</a>
+</div>
+{% endblock %}

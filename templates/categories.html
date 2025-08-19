@@ -1,0 +1,183 @@
+{% extends "base.html" %}
+{% block content %}
+
+<h2 class="page-title">Categories</h2>
+
+<!-- Search Bar -->
+<div><input type="text"
+       placeholder="Search categories..."
+       id="categorySearch"
+       class="category-search"
+       style="padding:8px; max-width:380px; width:250px; float:right; margin-bottom:12px;">
+
+</div>
+<!-- Add Category Form -->
+<form method="POST" class="category-form" action="{{ url_for('categories') }}" style="max-width:500px;">
+
+  <!-- Heading on its own line -->
+  <h3 style="margin-bottom:8px;">Add New Category Here</h3>
+
+  <!-- Add Category inputs in a row -->
+  <div style="display:flex; gap:6px; margin-bottom:12px;">
+      <input type="text" name="name" placeholder="Category Name" required style="flex:1; padding:8px;">
+      <input type="text" name="description" placeholder="Description (optional)" style="flex:1; padding:8px;">
+  </div>
+
+  <!-- Add button on a new line -->
+  <button type="submit" style="padding:8px 16px;margin-bottom:12px; background:#0047b3; color:#fff; border:none; cursor:pointer; display:block;">
+    Add
+  </button>
+
+</form>
+
+
+<!-- Categories Table -->
+<table class="categories-table" id="categoriesTable" style="width:100%; margin-top:12px;">
+  <thead>
+    <tr>
+      <th style="width:40%;">Name</th>
+      <th style="width:45%;">Description</th>
+      <th style="width:15%;">Actions</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in categories %}
+    <tr data-id="{{ c['CategoryID'] }}">
+      <td class="cat-name">{{ c['Name'] }}</td>
+      <td class="cat-desc">{{ c['Description'] or '-' }}</td>
+      <td class="cat-actions">
+        <a href="{{ url_for('attributes', cat_id=c['CategoryID']) }}" title="Manage Attributes" style="margin-right:8px;">
+          <i class="fas fa-cogs"></i>
+        </a>
+        <a href="{{ url_for('add_product', cat_id=c['CategoryID']) }}" title="Add Product" style="margin-right:8px;">
+          <i class="fas fa-plus-circle"></i>
+        </a>
+        <a href="#" class="edit-btn" title="Edit" style="margin-right:8px;">
+          <i class="fas fa-edit"></i>
+        </a>
+        <a href="#" class="delete-btn" title="Delete" style="color:#d9534f;">
+          <i class="fas fa-trash-alt"></i>
+        </a>
+      </td>
+    </tr>
+  {% endfor %}
+  </tbody>
+</table>
+
+<!-- Edit Category Modal -->
+<div id="editCategoryModal" class="modal">
+  <div class="modal-content">
+    <h3>Edit Category</h3>
+    <input type="text" id="editCatName" placeholder="Category Name">
+    <textarea id="editCatDesc" placeholder="Description (optional)"></textarea>
+    <div class="modal-actions">
+      <button id="editCancel">Cancel</button>
+      <button id="editSave">Update</button>
+    </div>
+  </div>
+</div>
+
+<!-- Styles -->
+<style>
+.modal { display: none; position: fixed; top:0; left:0; right:0; bottom:0; background: rgba(0,0,0,0.5); align-items:center; justify-content:center; z-index:1000; opacity:0; transition: opacity 0.3s ease; }
+.modal.show { display:flex; opacity:1; }
+.modal-content { background:#fff; padding:20px 25px; border-radius:12px; max-width:400px; width:90%; box-shadow:0 4px 12px rgba(0,0,0,0.2); transform:translateY(-20px); transition:transform 0.3s ease; }
+.modal.show .modal-content { transform:translateY(0); }
+.modal-content h3 { margin-top:0; margin-bottom:15px; color:#0047b3; }
+.modal-content input, .modal-content textarea { width:100%; padding:8px 10px; margin-bottom:12px; border-radius:6px; border:1px solid #ccc; }
+.modal-content textarea { resize:vertical; min-height:60px; }
+.modal-actions { text-align:right; }
+.modal-actions button { padding:6px 12px; border-radius:6px; border:none; cursor:pointer; font-size:0.9rem; }
+#editCancel { background:#ccc; margin-right:8px; }
+#editSave { background:#0047b3; color:#fff; }
+</style>
+
+<!-- Scripts -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const searchInput = document.getElementById('categorySearch');
+    const tableRows = document.querySelectorAll('#categoriesTable tbody tr');
+
+    // Live Search
+    searchInput.addEventListener('input', function() {
+        const filter = this.value.toLowerCase();
+        tableRows.forEach(row => {
+            const name = row.querySelector('.cat-name').textContent.toLowerCase();
+            const desc = row.querySelector('.cat-desc').textContent.toLowerCase();
+            row.style.display = (name.includes(filter) || desc.includes(filter)) ? '' : 'none';
+        });
+    });
+
+    // Modal Elements
+    const modal = document.getElementById('editCategoryModal');
+    const editNameInput = document.getElementById('editCatName');
+    const editDescInput = document.getElementById('editCatDesc');
+    const editSaveBtn = document.getElementById('editSave');
+    const editCancelBtn = document.getElementById('editCancel');
+    let currentRow = null;
+
+    // Edit Button
+    document.querySelectorAll('.edit-btn').forEach(btn => {
+        btn.addEventListener('click', function(e) {
+            e.preventDefault();
+            currentRow = this.closest('tr');
+            editNameInput.value = currentRow.querySelector('.cat-name').textContent.trim();
+            editDescInput.value = currentRow.querySelector('.cat-desc').textContent.trim() === '-' ? '' : currentRow.querySelector('.cat-desc').textContent.trim();
+            modal.classList.add('show');
+        });
+    });
+
+    // Cancel Edit
+    editCancelBtn.addEventListener('click', function() {
+        modal.classList.remove('show');
+        currentRow = null;
+    });
+
+    // Save Edit
+    editSaveBtn.addEventListener('click', function() {
+        if (!currentRow) return;
+        const catId = currentRow.dataset.id;
+        const newName = editNameInput.value.trim();
+        const newDesc = editDescInput.value.trim();
+        if (!newName) { alert('Name cannot be empty'); return; }
+
+        fetch(`/categories/edit/${catId}`, {
+            method:'POST',
+            headers:{'Content-Type':'application/x-www-form-urlencoded'},
+            body:`name=${encodeURIComponent(newName)}&description=${encodeURIComponent(newDesc)}`
+        })
+        .then(res => res.json())
+        .then(data => {
+            if(data.status==='success'||data.success){
+                currentRow.querySelector('.cat-name').textContent=newName;
+                currentRow.querySelector('.cat-desc').textContent=newDesc||'-';
+                modal.classList.remove('show'); currentRow=null;
+            }else{ alert('Failed to update category.'); }
+        }).catch(err=>{ console.error(err); alert('Server error.'); });
+    });
+
+    // Click outside modal closes
+    window.addEventListener('click', function(e){
+        if(e.target===modal){ modal.classList.remove('show'); currentRow=null; }
+    });
+
+    // Delete Button
+    document.querySelectorAll('.delete-btn').forEach(btn=>{
+        btn.addEventListener('click', function(e){
+            e.preventDefault();
+            const row = this.closest('tr');
+            const catId = row.dataset.id;
+            if(!confirm("Are you sure you want to delete this category?")) return;
+
+            fetch(`/categories/delete/${catId}`,{method:'POST'})
+            .then(res=>res.json())
+            .then(data=>{
+                if(data.status==='success'||data.success){ row.remove(); }
+                else{ alert('Failed to delete category.'); }
+            }).catch(err=>{ console.error(err); alert('Server error.'); });
+        });
+    });
+});
+</script>
+
+{% endblock %}

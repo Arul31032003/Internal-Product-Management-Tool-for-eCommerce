@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% block content %}
+
+<div style="max-width:700px; margin:30px auto; font-family:Arial, sans-serif; padding:0 10px;">
+
+    <!-- Page Title -->
+    <h2 style="color:#0047b3; text-align:center; margin-bottom:25px;">
+        Adding A Product in {{ category['Name'] }}
+    </h2>
+
+    <!-- Product Form -->
+    <form method="POST" enctype="multipart/form-data"
+          style="background:#fff; padding:20px 20px 25px 20px; border-radius:12px; box-shadow:0 8px 20px rgba(0,0,0,0.1);">
+
+        <!-- Product Basic Info -->
+        <div style="margin-bottom:12px;">
+            <label style="display:block; font-weight:600; margin-bottom:5px;">Product Name</label>
+            <input type="text" name="name" placeholder="Product Name" required
+                   style="width:98%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-bottom:10px; font-size:15px;">
+            <label style="display:block; font-weight:600; margin-bottom:5px;">Description</label>
+            <input type="text" name="sku" placeholder="Description" required
+                   style="width:98%; padding:10px; border:1px solid #ccc; border-radius:6px; margin-bottom:10px; font-size:15px;">
+            <label style="display:block; font-weight:600; margin-bottom:5px;">Price</label>
+            <input type="number" step="1" name="price" placeholder="Price"
+                   style="width:98%; padding:10px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+        </div>
+
+        <!-- Attributes / Description -->
+        {% if attributes %}
+        <h4 style=" margin-top:18px; margin-bottom:10px;">Product Details</h4>
+        {% for attr in attributes %}
+            <div style="margin-bottom:10px;">
+                <label style="display:block; font-weight:600; margin-bottom:5px;">{{ attr['Name'] }}:</label>
+                <input type="text" name="{{ attr['Slug'] }}"
+                       style="width:98%; padding:9px; border:1px solid #ccc; border-radius:6px; font-size:15px;">
+            </div>
+        {% endfor %}
+        {% endif %}
+
+        <!-- Images -->
+        <h3 style="color:#007bff; margin-top:18px; margin-bottom:10px;">Load Product Images</h3>
+        <input type="file" name="images" multiple
+               style="margin-bottom:18px; font-size:15px;">
+
+        <!-- Buttons -->
+        <div style="display:flex; gap:10px; flex-wrap:wrap;">
+            <button type="submit"
+                    style="flex:1; padding:12px; background:#0047b3; color:white; border:none; border-radius:6px; font-size:15px; cursor:pointer;">
+                Save
+            </button>
+            <a href="{{ url_for('categories') }}"
+               style="flex:1; padding:12px; background:#ccc; color:black; text-decoration:none; border-radius:6px; font-size:15px; text-align:center;">
+               Back
+            </a>
+        </div>
+
+    </form>
+</div>
+
+{% endblock %}
